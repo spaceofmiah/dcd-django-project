@@ -9,7 +9,10 @@ Each steps would have a commit reference to changes made.
 
 1) Create a repository for project to track progress 
 
-( commit ref: 22bdc6a00b7b22e522487842089d20d99d1fc2bb )
-
 Created a repository to house the django project. Most importantly is to have a `.gitignore` for python during repo setup.
+
+
+2) Create `.dockerignore` file 
+
+This works like `.gitignore`. It is used to specify files & folders that should be ignored during the build of our docker images. (read more)[https://docs.docker.com/engine/reference/builder/#dockerignore-file]
 
