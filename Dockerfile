@@ -52,8 +52,8 @@ RUN python -m venv /py && \
     chown -R project:project /vol && \
     # Grant read, write and execute access to the owner
     chmod -R 755 /vol && \
-    # Make all script files within script directory executable
-    chmod -R -x /scripts
+    # Grant read, write and execute access to the owner
+    chmod -R 755 /scripts
 
 
 # Set to PATH the virtual environment created within image 
@@ -62,10 +62,10 @@ RUN python -m venv /py && \
 # Adding extra path: to the PATH variable simply allows us
 # to run commands within those paths without having to 
 # specify the full path.
-ENV PATH="/scripts:/py/bin:$PATH"
+ENV PATH="/scripts/:/py/bin:$PATH"
 
 # Set the user named project as the user to run commands by
 USER project
 
-CMD [ "run.sh" ]
+CMD ["run.sh"]
 
