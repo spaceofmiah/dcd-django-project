@@ -22,4 +22,8 @@ services:
     # Container Project Folder  :::: /project
     volumes:
       - ./src:/project
+    
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=dev-sekret-key
 
