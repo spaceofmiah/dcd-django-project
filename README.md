@@ -161,4 +161,19 @@ should spin up the django project with the db and all configurations setup. Acce
 `127.0.0.1:8000/admin` where you'll be prompted to input the user details that were created above. Proceed to create a todo and adding an attachment. On success, you should be able to view the attachment and all details provided during the todo creation.
 
 
+**REVERSE PROXY CONFIGURATION**
+
+As mentioned earlier, it's not adviced to serve django static and media files using django. Before we commence with the reverse proxy, it's safe to state here that, it wouldn't only serve our static and media files but also act as a gateway to accessing our application. So for every request containing `/static/` that would be handled by the reverse proxy by accessing the folders within our server within which our static files would be kept. For every other request that doesn't commence with `/static/` that is passed down to our application which would run the necessary computation and send back the response to the proxy which would then take serve that to the client.
+
+A new folder `proxy` is created within our project folder and in this folder are 
+
+  - defualt.conf.tpl : this is a template which has placeholders for secret value configurations. This template will be fed the actual values and then converted from being a template to an actual file
+
+  - uwsgi_params : defines parameters needed for better request and response headers. [learn more](https://uwsgi-docs.readthedocs.io/en/latest/Nginx.html#what-is-the-uwsgi-params-file)
+
+  - Dockerfile : Configures nginx image which would act as the gateway for request and response cycle for the project. This file uses an unprivileged image as the base image for security reasons. It then proceeds in copying the custom files, create new files using root user ( switches to root user ) that'll be needed to run nginx. A switch back to nginx user is found at the end of the file. Nginx is started with a script file `./proxy/run.sh`.
+
+  - run.sh : This file does the feeding of the actual secret data to the `default.conf.tpl` and outputs the converted template to a file created in the Dockerfile by root user. 
+
+  > Earlier some files where created within Dockerfile serving the reverse proxy, if those file were'nt created and permission not granted to the nginx user, the convertion of the template would've failed because the output file wouldn't be available and also the nginx user would'nt have privilege to either create or modify the file.
 
