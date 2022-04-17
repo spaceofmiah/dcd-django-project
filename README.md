@@ -83,4 +83,6 @@ Becuase our docker-compose.yml will be pushed to git, the current approach is no
 
 This service setup is necessary as it makes provision for a postgres database
 
+8) Add postgres before and after build dependencies & drivers to image
 
+To connect django project to the postgres db, there needs to be a driver to facilitate this connectivity. The django `x` postgres driver is defined within `requirements.txt`. To use this driver some packages are needed to build it `build-base, postgresql-dev, musl-dev` and some others are needed for the actual connection `postgresql-client`. The build packages are not needed after the driver is installed and are safe to delete. To easily delete these unwanted packages, during their installation, they were all installed in a `tmp-deps` where deleting the `tmp-deps` would automatically delete them.
