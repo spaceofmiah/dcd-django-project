@@ -21,12 +21,18 @@ services:
     ports:
       - 8000:8000
     
+    # ./src:/project
     # As we add or update our project on the host machine (within src/ folder), propagate 
     # the change on the container as well ( within project folder ).
     # Host Project Folder       :::: ./src
     # Container Project Folder  :::: /project
+
+    # ./data/web:/vol/web
+    # Maps the directory created for serving static & media file from host 
+    # machine to the container. The directory is created in Dockerfile.
     volumes:
       - ./src:/project
+      - ./data/web:/vol/web
     
     environment:
       - DEBUG=1

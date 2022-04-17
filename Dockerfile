@@ -40,7 +40,16 @@ RUN python -m venv /py && \
     # create a user named project for the image to 
     # avoid root usage. No home directory is created, 
     # no password either
-    adduser --disabled-password --no-create-home project
+    adduser --disabled-password --no-create-home project && \
+    # Create directory and subdirectory (-p) to house static file
+    mkdir -p /vol/web/static && \
+    # Create directory and subdirectory (-p) to house media file
+    mkdir -p /vol/web/media  && \
+    # Grant ownership of the of media and static directory (-R) 
+    # recursively to the application user which was created above
+    chown -R project:project /vol && \
+    # Grant read, write and execute access to the owner
+    chmod -R 755 /vol
 
 # Set to PATH the virtual environment created within image 
 # so every python command would use the virtual environment

@@ -132,7 +132,33 @@ To do this a custom command is created to do the checks and wait. Read more from
 
 This command is defined within `./src/core/management/commands/wait_for_db.py` and all our command is doing is safely handling errors while trying to check if the database connection is ready.
 
+**SERVING STATIC & MEDIA FILES (DEVELOPMENT CONFIGURATION)**
 
+Django [is not efficient at serving static and media files in production](https://docs.djangoproject.com/en/4.0/howto/deployment/wsgi/modwsgi/#serving-files-1), this functionality needs to be handled through reverse proxy. To ensure that the system are all properly functioning, we'll first test that we can work with static and media files from our development server. Static and media files need root directory to store the files collected either during developement or from user's upload. This configurations are included in `./src/src/settings.py`.
+
+We'll allow our project's docker image to create these directory if they dont' already exist by creating the exact directory path configured within `./src/src/settings.py` for STATIC_ROOT & MEDIA_ROOT in our RUN command within `Dockerfile`. Ownership and access are also very important that it be granted to the project owner which is the user that is created for the project.
+
+Just so we don't have to re-run our docker image whenever a media file is uploaded or updated by a user, (for development purpose only) the media and static directory are mapped from the host machine to the container which would allow an automatic sync.
+
+Lastly to view our static and media files, they need to be accessible from the web i.e they need a route. In `./src/src/settings.py` STATIC_URL & MEDIA_URL configurations denotes that any request with such a url path is attempting to access either static or media files respectively. For django routing system to be aware of these routes, it's required that they be added to the project base route configurations `./src/src/urls.py`
+
+
+**TEST STATIC & MEDIA SETUP (DEVELOPMENT CONFIGURATIONS)**
+
+We'll be testing this configuration using the `Todo` model which as created earlier. This model was added to admin, so  to interact with it, we need an admin user. create admin user using docker compose command
+
+```bash
+docker-compose run --rm project sh -c "python manage.py createsuperuser"
+```
+
+The above command would prompt to enter some input, provide any input, but do remember the details as it'll be required of you to access the admin site. 
+
+```bash
+docker-compose up
+```
+
+should spin up the django project with the db and all configurations setup. Access the admin site with
+`127.0.0.1:8000/admin` where you'll be prompted to input the user details that were created above. Proceed to create a todo and adding an attachment. On success, you should be able to view the attachment and all details provided during the todo creation.
 
 
 
