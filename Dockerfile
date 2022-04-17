@@ -16,6 +16,8 @@ COPY ./requirements.txt  /requirements.txt
 # project
 COPY ./src /project
 
+COPY ./scripts /scripts
+
 # Configure working directory as the project folder
 WORKDIR /project
 
@@ -31,7 +33,7 @@ RUN python -m venv /py && \
     # install postgres dependencies needed to build postgres
     # driver and have these dependencies stored temporarily
     apk add --update --no-cache --virtual .tmp-deps \
-        build-base postgresql-dev musl-dev && \
+        build-base postgresql-dev musl-dev linux-headers && \
     # install project dependencies using requirements file
     /py/bin/pip install -r /requirements.txt && \
     # delete all the dependencies needed to build postgres
@@ -49,14 +51,21 @@ RUN python -m venv /py && \
     # recursively to the application user which was created above
     chown -R project:project /vol && \
     # Grant read, write and execute access to the owner
-    chmod -R 755 /vol
+    chmod -R 755 /vol && \
+    # Make all script files within script directory executable
+    chmod -R -x /scripts
+
 
 # Set to PATH the virtual environment created within image 
 # so every python command would use the virtual environment
-ENV PATH="/py/bin:$PATH"
+
+# Adding extra path: to the PATH variable simply allows us
+# to run commands within those paths without having to 
+# specify the full path.
+ENV PATH="/scripts:/py/bin:$PATH"
 
 # Set the user named project as the user to run commands by
 USER project
 
-
+CMD [ "run.sh" ]
 

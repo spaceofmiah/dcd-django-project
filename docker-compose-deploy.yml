@@ -1,0 +1,68 @@
+version: '3.9'
+
+
+services:
+  project:
+    
+    build: 
+      context: .
+    
+    restart: always
+    
+    # This is a named volume which helps to preserve our codebase
+    # and allows us to rollback and start the container from the
+    # roll back version.
+
+    volumes:
+      - static-data:/vol/web
+
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    
+    depends_on:
+      - db
+
+
+  db:
+    image: postgres:12.2-alpine
+    restart: always
+
+    # This is a named volume which helps to preserve our database
+    # whenever we mistakenly use docker-compose down (this 
+    # command should automatically delete our database.)
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+
+
+  proxy:
+    build: 
+      context: ./proxy
+    restart: always
+    depends_on:
+      - project
+    ports:
+      - 80:8000
+    
+    # This shares the same volume as the project and this is 
+    # how the proxy knows how to serve the static & media 
+    # files when it gets the request and also application
+    # routes when it gets request not having /static in
+    # the url path... proxy and project shares same volume 
+    volumes:
+      - static-data:/vol/static
+
+
+# Defines named volume.
+volumes:
+  postgres-data:
+  static-data:

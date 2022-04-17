@@ -177,3 +177,15 @@ A new folder `proxy` is created within our project folder and in this folder are
 
   > Earlier some files where created within Dockerfile serving the reverse proxy, if those file were'nt created and permission not granted to the nginx user, the convertion of the template would've failed because the output file wouldn't be available and also the nginx user would'nt have privilege to either create or modify the file.
 
+
+**PRODUCTION DOCKER COMPOSE**
+
+There are few difference between the development docker compose file and the production one.
+
+- production docker-compose uses shared named volumes. This allows related services to have access to each other (networking) and also to persist data incase of an unexpected shutdown. [learn more about volumes](https://docs.docker.com/storage/volumes/)
+
+- production docker-compose includes additional service and i.e the `proxy` service which would help in handling request and response. Unlike development where we started our server using `python manage.py runserver 0.0.0.0:8000` for production, we'll map a web port `80` to that of our project `8000` and allow start the server with a production grade web server, in this case uWSGI.
+
+- environment variable used in production are fed to compose which are then fed to the underlying services. 
+
+- Dockerfile is updated with the dependencies to install production web server and also a CMD command to run the script which would start the web server.
