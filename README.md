@@ -107,3 +107,20 @@ docker-compose run --rm project sh -c "python manage.py startapp core"
 
 The above command would create a django app named `core` and this should be located within `./src` folder.
 
+**MAKEMIGRATIONS**
+
+Now that we've an app, for django to recognize the app, it need to first be
+registered within `INSTALLED_APPS` within settings.py. Models are django 
+representation of a database table, which can be migrated after definition of the model. 
+
+After adding a model in the `./src/core/models.py` file, the below command would run migration for that model to the database connected to the django project
+
+```bash
+docker-compose run --rm project sh -c "python manage.py makemigrations"
+docker-compose run --rm project sh -c "python manage.py migrate"
+```
+
+To interact with the model, it's registered in admin site within `./src/core/admin.py`.
+
+
+
