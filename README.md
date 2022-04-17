@@ -78,3 +78,9 @@ With the above commands, if everything goes fine, you should now have a django p
 Secret configuration values shouldn't be exposed within projects. To clean our django project secret key, environment variables are fed from `docker-compose.yml` from `project` service into django project. This is possible as the `project` service will be used to run a container (which would act as a host someworth like our local/host machine) that contains similar copy of our project. 
 
 Becuase our docker-compose.yml will be pushed to git, the current approach is not also adviced for projection builds as the secret configuration values are also exposed. You could read more on [how to configure environment variables ](https://docs.docker.com/compose/environment-variables/)
+
+7) Add postgres database service
+
+This service setup is necessary as it makes provision for a postgres database
+
+
