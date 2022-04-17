@@ -26,17 +26,8 @@ EXPOSE 8000
 RUN python -m venv /py && \ 
     # install upgrade for pip within the virtual env
     /py/bin/pip install --upgrade pip  && \
-    # install postgres driver needed for postgres connection
-    apk add --update --no-cache postgresql-client && \
-    # install postgres dependencies needed to build postgres
-    # driver and have these dependencies stored temporarily
-    apk add --update --no-cache --virtual .tmp-deps \
-        build-base postgresql-dev musl-dev && \
     # install project dependencies using requirements file
     /py/bin/pip install -r /requirements.txt && \
-    # delete all the dependencies needed to build postgres
-    # driver because at this point the driver is built.
-    apk del .tmp-deps && \
     # create a user named project for the image to 
     # avoid root usage. No home directory is created, 
     # no password either
