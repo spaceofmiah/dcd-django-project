@@ -14,5 +14,8 @@ Created a repository to house the django project. Most importantly is to have a 
 
 2) Create `.dockerignore` file 
 
-This works like `.gitignore`. It is used to specify files & folders that should be ignored during the build of our docker images. (read more)[https://docs.docker.com/engine/reference/builder/#dockerignore-file]
+This works like `.gitignore`. It is used to specify files & folders that should be ignored during the build of our docker images. [read more](https://docs.docker.com/engine/reference/builder/#dockerignore-file)
 
+3) Add `requirements.txt` file
+
+This file list the dependencies which are essential to the creation and functioning of our django project.
