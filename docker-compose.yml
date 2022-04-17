@@ -25,7 +25,14 @@ services:
     
     environment:
       - DEBUG=1
+      - DB_HOST=db          # This is the name of the service that's powering the database
+      - DB_NAME=dev
+      - DB_USER=devuser
+      - DB_PASS=changeme
       - SECRET_KEY=dev-sekret-key
+    
+    depends_on:
+      - db                  # This is the name of the service that's powering the database
 
   # the service for our postgres database 
   db:

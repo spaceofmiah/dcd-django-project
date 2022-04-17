@@ -86,3 +86,24 @@ This service setup is necessary as it makes provision for a postgres database
 8) Add postgres before and after build dependencies & drivers to image
 
 To connect django project to the postgres db, there needs to be a driver to facilitate this connectivity. The django `x` postgres driver is defined within `requirements.txt`. To use this driver some packages are needed to build it `build-base, postgresql-dev, musl-dev` and some others are needed for the actual connection `postgresql-client`. The build packages are not needed after the driver is installed and are safe to delete. To easily delete these unwanted packages, during their installation, they were all installed in a `tmp-deps` where deleting the `tmp-deps` would automatically delete them.
+
+9) Connect database to project
+
+Database secret configs are padded as environment variable to project and connectivity is allowed with the `depends_on` which state that the project depends on the database and as such, the database would needed to be up and running before attempting to run the project. `depends_on` also allows mapping of database host possible. The database environment variable are used to configure postgres db within project's `settings.py` file.
+
+**CREATE A DJANGO APP**
+
+To test that the both postgres and project services are successfully connected, we'll create a django app and confirm:
+
+```bash
+docker-compose build
+```
+A rebuild is needed as the `Dockerfile` has been updated 
+
+
+```bash
+docker-compose run --rm project sh -c "python manage.py startapp core"
+```
+
+The above command would create a django app named `core` and this should be located within `./src` folder.
+
