@@ -19,3 +19,8 @@ This works like `.gitignore`. It is used to specify files & folders that should 
 3) Add `requirements.txt` file
 
 This file list the dependencies which are essential to the creation and functioning of our django project.
+
+4) Add Dockerfile
+
+This version of docker file is just enough to create a django project. It contains commands which not only defines the type (`python`) of project we're building but also helps to install dependency needed by the project.
+
