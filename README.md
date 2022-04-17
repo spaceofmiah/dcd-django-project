@@ -122,5 +122,17 @@ docker-compose run --rm project sh -c "python manage.py migrate"
 
 To interact with the model, it's registered in admin site within `./src/core/admin.py`.
 
+**MAKING PROJECT STARTUP WAIT FOR DB AVAILABILITY**
+
+The migrations command from above needs to be run automatically from docker-compose.yml, this brings about an issue where although our `project` service depends on the `db` service and it's expected that the `db` is started first before the `project`... that's all there's **started** ... depends on only tells which should start first. Django on the other hand, doesn't only just require that the db has started but also requires it to be **ready to accept connection** before the connectivity succeeds. These errors where just so unexplainable/unclear until after lots of trials ( it was alot of time trying to fix this ). 
+
+To ensure that the database is ready to accept connection before we actually run any django command, we need to somehow tell django to wait for the database to initialize and be ready for connection before we proceed without breaking the process.
+
+To do this a custom command is created to do the checks and wait. Read more from the django offical docs on [how to create custom commands](https://docs.djangoproject.com/en/4.0/howto/custom-management-commands/). 
+
+This command is defined within `./src/core/management/commands/wait_for_db.py` and all our command is doing is safely handling errors while trying to check if the database connection is ready.
+
+
+
 
 
