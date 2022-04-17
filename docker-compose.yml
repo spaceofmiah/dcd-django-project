@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+
+  # the container for our django project
+  project:
+   
+    # will be built using an image which resides in context
+    build: 
+      # same as this docker-compose.yml ( .  :: references the Dockerfile )
+      context: .
+    
+    # Connect project container port to the host port. This connection is only possible
+    # because the port of the image from which this container is built has it's port 8000 
+    # exposed in Dockerfile
+    ports:
+      - 8000:8000
+    
+    # As we add or update our project on the host machine (within src/ folder), propagate 
+    # the change on the container as well ( within project folder ).
+    # Host Project Folder       :::: ./src
+    # Container Project Folder  :::: /project
+    volumes:
+      - ./src:/project
+
